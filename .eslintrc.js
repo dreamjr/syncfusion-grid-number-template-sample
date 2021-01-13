@@ -13,6 +13,8 @@ module.exports = {
   },
   rules: {
     "curly": "error",
+    "no-console": "off",
+    "no-debugger": "off",
     // "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
     // "no-debugger": process.env.NODE_ENV === "production" ? "error" : "off",
     "semi": ["error"]
