@@ -1,15 +1,20 @@
 <template>
   <div class="hello">
-
+    {{numberData}}
+    <br>
+    <input-number v-model="numberData" width="100px"></input-number>
   </div>
 </template>
 
 <script>
+  import InputNumber from './common/InputNumber';
+
 export default {
   name: 'Main',
+  components: {InputNumber},
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      numberData: 111
     }
   }
 }
