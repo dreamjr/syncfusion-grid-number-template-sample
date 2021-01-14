@@ -12,6 +12,8 @@
           <e-column field='OrderID' headerText='Order ID' textAlign='Right' width=90></e-column>
           <e-column field='CustomerID' headerText='Customer ID' width=120></e-column>
           <e-column field='Freight' headerText='Freight' textAlign='Right' type='number' format='N' width=90 allowFiltering="true" :editTemplate="gridInputNumberEditTemplate"></e-column>
+          <!--<e-column field='Freight' headerText='Freight' textAlign='Right' type='number' format='N'
+                    width=90 allowFiltering="true" :editTemplate="gridInputNumberEditTemplate" :valueAccessor="freightValueAccessor"></e-column>-->
         </e-columns>
       </ejs-grid>
     </div>
@@ -36,7 +38,7 @@
           { OrderID: 10251, CustomerID: 'VICTE', Freight: 0 },
           { OrderID: 10252, CustomerID: 'SUPRD', Freight: 123 },
           { OrderID: 10253, CustomerID: 'HANAR', Freight: 0 },
-          { OrderID: 10254, CustomerID: 'CHOPS', Freight: 333 },
+          { OrderID: 10254, CustomerID: 'CHOPS', Freight: 25555 },
           { OrderID: 10255, CustomerID: 'RICSU', Freight: 244 },
           { OrderID: 10256, CustomerID: 'WELLI', Freight: 21 }
         ],
@@ -46,7 +48,16 @@
     },
     methods: {
       gridInputNumberEditTemplate: () =>
-        GridInputNumberEditTemplate("Freight")
+        GridInputNumberEditTemplate("Freight"),
+      freightValueAccessor: (field, data) => {
+        const fieldData = data[field];
+
+        if(fieldData ===0) {
+          return "-";
+        } else {
+          return fieldData.toLocaleString();
+        }
+      }
     },
     provide: {
       grid: [Page, Edit, Toolbar, Filter]
