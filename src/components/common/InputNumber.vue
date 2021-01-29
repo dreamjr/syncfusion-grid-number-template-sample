@@ -11,6 +11,7 @@
       :style="{textAlign:align}"
       v-on:keyup="inputNumberAutoComma"
       v-on:blur="blurEvnt"
+      v-on:keydown="inputkeypressed"
       v-on:focusin="focusInEvnt"
       v-on:change="hiddenChange"
       autocomplete="off"
@@ -21,13 +22,13 @@
 </template>
 
 <style scoped>
-  .inputNumber {box-sizing: border-box; width: 100%; border: 1px solid #e0e0e0; border-radius: 3px; background-color: #fff;}
-  .inputNumber input[type="text"] {display: block; box-sizing: border-box; width: 100%; padding: 0 6px; margin: 0; border: none; background-color: transparent; color: #666; font-size: 12px; line-height: 21px; font-family: '돋움', Dotum, Arial, Verdana, sans-serif; text-align: right; outline: none;}
-  .inputNumber input[type="text"]::placeholder {color: #bbb;}
+.inputNumber {box-sizing: border-box; width: 100%; border: 1px solid #e0e0e0; border-radius: 3px; background-color: #fff;}
+.inputNumber input[type="text"] {display: block; box-sizing: border-box; width: 100%; padding: 0 6px; margin: 0; border: none; background-color: transparent; color: #666; font-size: 12px; line-height: 21px; font-family: '돋움', Dotum, Arial, Verdana, sans-serif; text-align: right; outline: none;}
+.inputNumber input[type="text"]::placeholder {color: #bbb;}
 
-  .inputNumber.focus {border-color: #999;}
-  .inputNumber.disabled {border-color: #e0e0e0; background-color: #f0f0f0;}
-  .inputNumber.disabled input[type="text"] {color: #bbb; cursor: default;}
+.inputNumber.focus {border-color: #999;}
+.inputNumber.disabled {border-color: #e0e0e0; background-color: #f0f0f0;}
+.inputNumber.disabled input[type="text"] {color: #bbb; cursor: default;}
 </style>
 
 <script>
@@ -147,6 +148,15 @@ export default {
         this.$refs[this.refs].setSelectionRange(0, this.numberValue.length);
       }
     },
+    inputkeypressed(args){
+      // syncfusion 응답 적용
+      if(args.key == "Enter"){
+        const emitData = this.allowDot
+          ? Number.parseFloat(this.inputNumberRemoveComma(this.numberValue))
+          : Number.parseInt(this.inputNumberRemoveComma(this.numberValue));
+        this.numberValue = emitData.toString();
+      }
+    },
     blurEvnt(){
       this.active = false;
       if(this.min !== null && this.inputNumberRemoveComma(this.numberValue) < this.min){
@@ -156,6 +166,13 @@ export default {
       }
       this.numberValue = this.inputNumberWithComma(this.inputNumberMinMaxValue(this.inputNumberRemoveZero(this.inputNumberRemoveComma(this.numberValue))));
       this.emitData(this.numberValue);
+
+      // syncfusion 응답 적용
+      const emitData = this.allowDot
+        ? Number.parseFloat(this.inputNumberRemoveComma(this.numberValue))
+        : Number.parseInt(this.inputNumberRemoveComma(this.numberValue));
+      this.numberValue = emitData.toString();
+
       // this.$emit("change", this.getEmittedValue(this.numberValue));
     },
     getInitValue(value) {
@@ -229,7 +246,7 @@ export default {
             } else if (
               selection <= dotIndex &&
               this.inputNumberRemoveComma(preValueArr[0]).length >=
-                this.maxLength &&
+              this.maxLength &&
               !isSelectAll
             ) {
               evt.preventDefault(); //소수점 이상 자리수 체크해서
@@ -254,7 +271,7 @@ export default {
         } else {
           if (
             this.inputNumberRemoveComma(this.numberValue.replace("-","")).length >=
-              this.maxLength &&
+            this.maxLength &&
             !isSelectAll
           ) {
             evt.preventDefault(); //자릿수 체크해서 막기
