@@ -7,7 +7,7 @@
     </div>
     <br><br>
     <div id="gridArea">
-      <ejs-grid :dataSource="data" :editSettings="editSettings" :allowFiltering="true" :filterSettings="defaultFilterSettings">
+      <ejs-grid ref="grid" :dataSource="data" :editSettings="editSettings" :allowFiltering="true" :filterSettings="defaultFilterSettings" :load="load">
         <e-columns>
           <e-column field='OrderID' headerText='Order ID' textAlign='Right' width=90></e-column>
           <e-column field='CustomerID' headerText='Customer ID' width=120></e-column>
@@ -57,6 +57,18 @@
         } else {
           return fieldData.toLocaleString();
         }
+      },
+      load() {
+        this.$refs.grid.ej2Instances.element.addEventListener("mousedown", function(e) {
+          var instance = this.ej2_instances[0];
+          if (e.target.classList.contains("e-rowcell")) {
+            let index = parseInt(e.target.getAttribute("Index"));
+            let colindex = parseInt(e.target.getAttribute("aria-colindex"));
+            let field = instance.getColumns()[colindex].field;
+            instance.editModule.saveCell();
+            instance.editModule.editCell(index, field);
+          };
+        });
       }
     },
     provide: {
